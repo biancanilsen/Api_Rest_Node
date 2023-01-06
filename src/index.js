@@ -1,10 +1,10 @@
+//Rodar aplicação: npm run dev
+
 const express = require('express');
-const mysql = require('mysql').pool;
+const mysql = require('mysql');
+var connection = require("../mysql");
 
 //Fake database
-let books = [
-
-]
 
 //Criar o app
 const app = express();
@@ -13,17 +13,27 @@ const app = express();
 app.use(express.json());
 
 app.post('/new', (req, res) => {
-    const {id, title, author, piblishAt} = req.body
-    const book = { id, title, author, piblishAt }
 
-    mysql.getConnection((error, conn) => {
+    connection.getConnection((error, conn) => {
        conn.query(
-        'INSERT INTO persons' 
-       ) 
+           'INSERT INTO persons (FirstName, Family, ActorBirth, Died ) VALUES (?,?,?,?)',
+           [req.body.FirstName, req.body.Family, req.body.ActorBirth, req.body.Died],
+           (error, resultado, field) => {
+               conn.release();
+               if(error) {
+                   return res.status(500).send({
+                       error: error,
+                       response: null
+                    });
+                }
+                res.status(201).send({
+                    mensagem: 'Produto inserido com sucesso',
+                    PersonId: resultado.insertId
+                })
+            }
+            ) 
+      
     })
-
-    books.push(book)
-    return res.status(201).json(book);
 });
 
 app.get('/list', (req, res) => {

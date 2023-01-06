@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-var pool = mysql.createPool({
+var connection = mysql.createPool({
     "user": "root",
     "password": "api_node",
     "database": "17601",
@@ -8,4 +8,4 @@ var pool = mysql.createPool({
     "port": 3306
 });
 
-exports.pool = pool;
+exports.connection = connection;

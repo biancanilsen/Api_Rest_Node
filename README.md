@@ -6,7 +6,7 @@ Api-rest-node é a implementação do servidor API REST construída sobre e Node
 ## Instalando as dependências
 - npm i 
 
-## Executar a aplicação
+## Executando a aplicação
 - npm run dev
 
 

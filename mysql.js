@@ -1,11 +1,30 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
-var connection = mysql.createPool({
+var pool = mysql.createPool({
     "user": "root",
-    "password": "api_node",
-    "database": "17601",
+    "password": "170601",
+    "database": "api_node",
     "host": "localhost",
     "port": 3306
 });
 
-exports.connection = connection;
+exports.pool = pool;
+
+//  const mysql = require ('mysql2');
+
+//  var connection = mysql.createConnection({
+//     host : 'localhost',
+//     database : 'study',
+//     user: 'root',
+//     password: '170601'
+//  });
+
+//  connection.connect(function (error){
+//     if(error){
+//         throw error;
+//     }
+//     else{
+//         console.log('MySQL Database is connected Succcesfully')
+//     }
+//  });
+//  module.exports = connection;

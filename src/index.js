@@ -1,10 +1,6 @@
 //Rodar aplicação: npm run dev
-
 const express = require('express');
-const mysql = require('mysql');
-var connection = require("../mysql");
-
-//Fake database
+var mysql = require('../mysql').pool;
 
 //Criar o app
 const app = express();
@@ -12,22 +8,18 @@ const app = express();
 //Aplicar midlewares
 app.use(express.json());
 
+//CREATE
 app.post('/new', (req, res) => {
-
-    connection.getConnection((error, conn) => {
+    mysql.getConnection((error, conn) => {
+        if(error) { return res.status(500).send ({error: error }) }
        conn.query(
            'INSERT INTO persons (FirstName, Family, ActorBirth, Died ) VALUES (?,?,?,?)',
            [req.body.FirstName, req.body.Family, req.body.ActorBirth, req.body.Died],
            (error, resultado, field) => {
                conn.release();
-               if(error) {
-                   return res.status(500).send({
-                       error: error,
-                       response: null
-                    });
-                }
+               if(error) { return res.status(500).send ({error: error }) }
                 res.status(201).send({
-                    mensagem: 'Produto inserido com sucesso',
+                    mensagem: 'Personagem inserido com sucesso',
                     PersonId: resultado.insertId
                 })
             }
@@ -36,36 +28,77 @@ app.post('/new', (req, res) => {
     })
 });
 
+//READ
 app.get('/list', (req, res) => {
-    const allBooks = books
-    return res.status(200).json(allBooks)
+    mysql.getConnection((error, conn) => {
+     conn.query(
+         'SELECT * FROM persons;',
+         (error, resultado, field) => {
+          if(error) { return res.status(500).send ({error: error }) }
+          return res.status(200).send({response: resultado})
+         }
+     )
+    })
+ });
+
+ //READ
+ app.get('/:PersonID', (req, res) => {
+    mysql.getConnection((error, conn) => {
+     conn.query(
+         'SELECT * FROM persons WHERE PersonID = ?;',
+         (req.params.PersonID),
+         (error, resultado, field) => {
+          if(error) { return res.status(500).send ({error: error }) }
+          return res.status(200).send({response: resultado})
+         }
+     )
+    })
+ });
+
+
+ //UPDATE
+ app.patch('/', (req, res) => {
+    mysql.getConnection((error, conn) => {
+        if(error) { return res.status(500).send ({error: error }) }
+       conn.query(
+            `UPDATE persons
+                SET FirstName = ?,
+                Family = ?,
+                ActorBirth = ?, 
+                Died = ?
+            WHERE PersonID = ?`,
+          [req.body.FirstName, req.body.Family, req.body.ActorBirth, req.body.Died, req.body.PersonID],
+           (error, resultado, field) => {
+               conn.release();
+               if(error) { return res.status(500).send({error: error }) }
+                res.status(202).send({
+                    mensagem: 'Personagem atualizado com sucesso',
+                })
+            }
+            ) 
+      
+    })
 });
 
-app.get("/list/:book_id" , (req, res) => {
-    const {book_id} = req.params 
-    const book = books.find((book) => book.id === book_id);
-    if(!book) res.status(404).json('not found');
-    return res.status(200).json(book);
+//DELETE 
+app.delete('/', (req, res) => {
+    mysql.getConnection((error, conn) => {
+        if(error) { return res.status(500).send ({error: error }) }
+       conn.query(
+            'DELETE FROM persons WHERE PersonID = ?',
+           [req.body.PersonID],
+           (error, resultado, field) => {
+               conn.release();
+               if(error) { return res.status(500).send({error: error }) }
+                res.status(202).send({
+                    mensagem: 'Personagem removido com sucesso',
+                })
+            }
+            ) 
+      
+    })
 });
-
-app.delete('/list/:book_id' , (req, res) => {
-    const {book_id} = req.params 
-    const filteredBooks = books.filter(book => book.id !== book_id); 
-    books = filteredBooks
-    return res.status(204).json(books);
-});
-
-app.patch('/list/:book_id' , (req,res) => {
-    const {author, title, piblishAt} = req.body
-    const {book_id} = req.params
-    const book = books.find(book => book.id === book_id)
-    book.id = book.id
-    book.title = title ? title : book.title
-    book.author = author ? author : book.author
-    book.piblishAt = piblishAt ? piblishAt : book.piblishAt
-    return res.status(200).json(book)
-})
 
 //Mandar o servidor rodar
-app.listen(3501,() => console.log('server ir running'))
+app.listen(3501,() => console.log('Server ir running at port 3501' ))
 

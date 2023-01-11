@@ -100,5 +100,5 @@ app.delete('/', (req, res) => {
 });
 
 //Mandar o servidor rodar
-app.listen(3501,() => console.log('Server ir running at port 3501' ))
+app.listen(3501,() => console.log('Server ir running' ))
 

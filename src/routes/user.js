@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 var mysql = require('../../mysql').pool;
+const UserService = require('../services/userService')
 
 //CREATE
 router.post('/', (req, res) => {

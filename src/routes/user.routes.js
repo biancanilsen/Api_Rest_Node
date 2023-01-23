@@ -1,12 +1,8 @@
 const express = require('express');
 const { Router } = require('express');
-const UserService = require('../services/userService') 
+const userRegister  = require('../services/userService') 
 
 const userRouter = Router();
-userRouter.post('/register', UserService);
-userRouter.get('/list', UserService);
-// userRouter.get('/register', UserService);
-// userRouter.patch('/register', UserService);
-// userRouter.delete('/register', UserService);
+userRouter.post('/register', userRegister);
 
 module.exports = userRouter ;

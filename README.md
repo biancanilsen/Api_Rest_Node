@@ -1,12 +1,12 @@
 # API-REST-NODE
-## Descrição
+## Description
 
-Api-rest-node é a implementação do servidor API REST construída sobre e Node.js Express.js integração. 
+REST API made with JavaScript and Node.js with Express and Mysql as database. 
 
 ## Instalando as dependências
 - npm i 
 
-## Executando a aplicação
+## Running the application
 - npm run dev
 
 

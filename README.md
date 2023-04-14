@@ -1,4 +1,4 @@
-# API-REST-NODE
+# Api_Rest_Node
 ## Description
 
 REST API made with JavaScript and Node.js with Express and Mysql as database. 
